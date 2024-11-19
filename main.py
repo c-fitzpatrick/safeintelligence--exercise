@@ -40,7 +40,7 @@ if __name__ == "__main__":
         output_size=1
     )
 
-    network.train(train_dataloader, epochs=2, batch_size=32, learning_rate=0.01)
+    network.train(train_dataloader, epochs=2, batch_size=32, learning_rate=0.0001)
 
     ###########################################################################
     # Evaluate the network
