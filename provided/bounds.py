@@ -61,8 +61,8 @@ class IntervalBoundPropagation:
         """
         batch_dim = input_bounds.shape[0]
 
-        out_shape = input_bounds.shape
-        out_shape[1] = weights.shape[1]
+        out_shape = list(input_bounds.shape)
+        out_shape[1] = weights.shape[0]
 
         bounds_out = torch.empty(
             (batch_dim, *out_shape, 2),
@@ -72,7 +72,9 @@ class IntervalBoundPropagation:
 
         ########### YOUR CODE HERE ############
 
-        pass
+        # import einops
+        # bounds_out = einops.einsum(input_bounds, weights, "batch in bounds, out in -> batch out bounds")
+        bounds_out = torch.einsum("b i k, o i -> b o k", input_bounds, weights)
         
         ########### END YOUR CODE  ############
 
