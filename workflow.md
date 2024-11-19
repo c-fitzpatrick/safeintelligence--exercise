@@ -1,0 +1,22 @@
+## Steps
+ - Time spent brushing up on NN basics, and chain rule
+ - Setting up Poetry environment
+ - Thought: Could use Dask, prefer loading in chunks with concurrent futures
+ - Thought: More type hinting would be useful
+ - Writing code in MultiProcessDataset
+ - Creating test for MultiProcessDataset, confirm features and labels are loaded correctly 
+ - Using GitHub Copilot to complete further unit tests
+ - Time taking to manualy code back proagation with understanding
+ - Using chatgpt to review code
+ - Thought: What if there are more layers?
+ - Undefined epoch losses due to poor network design and weight initialization, reduced learning rate
+ - Basic testing for SimpleNeuralNetwork
+ - Parameterized tests for SimpleNeuralNetwork, varying hidden_sizes, corrected order of dimensions in asserts
+ - Tests for forward and backward propagation, used GitHub Copilot for suggestions
+ - Coding boundary propagation
+ - Corrected error assigning to Tensor, used list instead
+ - Correct conflict in dimensions of weights between back propagation and bound propagation using (dim_out, dim_in) as in forward() and backward()
+ - Thought: why are bounds being propagated individually rather than calculating bounds separately when code already exists?
+ - Created alternative method for propagating bounds across all layers using forward()
+ - Set up automated testing using ci.yml
+ - Thought: Speed up testing by using a mock network or pre-trained network to avoid dependencies on data loaders, data, and training
