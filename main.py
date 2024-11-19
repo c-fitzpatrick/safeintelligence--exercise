@@ -35,7 +35,6 @@ if __name__ == "__main__":
     ###########################################################################
 
     network = SimpleNeuralNetwork(
-        batch_size=32,
         input_dim=3,
         hidden_sizes=[4, 4],
         output_size=1
