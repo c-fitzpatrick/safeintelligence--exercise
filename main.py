@@ -10,7 +10,6 @@ from provided.constants import DATA_DIR
 if __name__ == "__main__":
 
     print("Running main.py...")
-    exit(0)
 
     ###########################################################################
     # Load data
