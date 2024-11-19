@@ -156,15 +156,99 @@ class SimpleNeuralNetwork:
 
         ########### YOUR CODE HERE ############
 
-        pass
+
+
+        ## Compute gradients for weights and biases for the h2 layer -> output layer
+        # N.B. A2 = Z2, A1 = Z1
+        # Loss = 1/2 * (Z3 - Y)^2
+        # Z3 = W3 * A2 + b3
+
+        # Derivative of loss wrt W3
+        # dL/dW3 = dL/dZ3 * dZ3/dW3 (chain rule)
+        # dZ3/dW3 = A2 (substitute)
+        # dL/dW3 = dL/dZ3 * A2
+        dW3 = torch.matmul(dZ3.T, self.Z2)
+        # dW3 = einops.einsum(self.Z2, dZ3, "batch hidden, batch output -> output hidden") (equivalent to matmul)
+
+        # Derivative of loss wrt b3
+        # dL/db3 = dL/dZ3 * dZ3/db3 (chain rule)
+        # dZ3/db3 = 1 (substitute)
+        # dL/db3 = dL/dZ3
+        db3 = torch.sum(dZ3, dim=0, keepdim=True)
+
+
+        ## Compute gradients for weights and biases for the h1 layer -> h2 layer
+        # Loss = 1/2 * (Z3 - Y)^2
+        # Z3 = W3 * A2 + b3
+        # A2 = W2 * A1 + b2
+
+        # Derivative of loss wrt A2
+        # dL/dA2 = dL/dZ3 * dZ3/dA2 (chain rule)
+        # dZ3/dA2 = W3 (substitute)
+        # dL/dA2 = dL/dZ3 * W3
+        dA2 = torch.matmul(dZ3, self.W3)
+        # dA2 = einops.einsum(self.W3, dZ3, "output hidden, batch output -> batch hidden") (equivalent to matmul)
+
+        # Derivative of loss wrt W2
+        # dL/dW2 = dL/dZ3 * dZ3/dA2 * dA2/dW2 (chain rule)
+        # dL/dA2 = dL/dZ3 * dZ3/dA2 (substitute)
+        # dA2/dW2 = A1 (substitute)
+        # dL/dW2 = dL/dA2 * A1
+        dW2 = torch.matmul(dA2.T, self.Z1)
+        # dW2 = einops.einsum(self.Z1, dA2, "batch hidden1, batch hidden2 -> hidden1 hidden2") (equivalent to matmul)
+        
+        # Derivative of loss wrt b2
+        # dL/db2 = dL/dZ3 * dZ3/dA2 * dA2/db2 (chain rule)
+        # dL/dA2 = dL/dZ3 * dZ3/dA2 (substitute)
+        # dA2/db2 = 1 (substitute)
+        # dL/db2 = dL/dA2
+        db2 = torch.sum(dA2, dim=0, keepdim=True)
+
+
+        ## Compute gradients for weights and biases for the input layer -> h1 layer
+        # Loss = 1/2 * (Z3 - Y)^2
+        # Z3 = W3 * A2 + b3
+        # A2 = W2 * A1 + b2
+        # A1 = W1 * X + b1
+
+        # Derivative of loss wrt A1
+        # dL/dA1 = dL/dZ3 * dZ3/dA2 * dA2/dA1 (chain rule)
+        # dL/dA2 = dL/dZ3 * dZ3/dA2 (substitute)
+        # dA2/dA1 = W2 (substitute)
+        # dL/dA1 = dL/dA2 * W2
+        dA1 = torch.matmul(dA2, self.W2)
+        # dA1 = einops.einsum(self.W2, dA2, "hidden1 hidden2, batch hidden1 -> batch hidden1") (equivalent to matmul)
+
+        # Derivative of loss wrt W1
+        # dL/dW1 = dL/dZ3 * dZ3/dA2 * dA2/dA1 * dA1/dW1 (chain rule)
+        # dL/dA1 = dL/dZ3 * dZ3/dA2 * dA2/dA1 (substitute)
+        # dA1/dW1 = X (substitute)
+        # dL/dW1 = dL/dA1 * X
+        dW1 = torch.matmul(dA1.T, self.X)
+        # dW1 = einops.einsum(self.X, dA1, "batch features, batch hidden -> hidden features") (equivalent to matmul)
+
+        # Derivative of loss wrt b1
+        # dL/db1 = dL/dZ3 * dZ3/dA2 * dA2/dA1 * dA1/db1 (chain rule)
+        # dL/dA1 = dL/dZ3 * dZ3/dA2 * dA2/dA1 (substitute)
+        # dA1/db1 = 1 (substitute)
+        # dL/db1 = dL/dA1
+        db1 = torch.sum(dA1, dim=0, keepdim=True)
+
+        # Derivative of loss wrt X
+        # dL/dX = dL/dZ3 * dZ3/dA2 * dA2/dA1 * dA1/dX (chain rule)
+        # dL/dA1 = dL/dZ3 * dZ3/dA2 * dA2/dA1 (substitute)
+        # dA1/dX = W1 (substitute)
+        # dL/dX = dL/dA1 * W1
+        dX = torch.matmul(dA1, self.W1)
+        # dX = einops.einsum(self.W1, dA1, "hidden features, batch hidden -> batch features") (equivalent to matmul)
+
 
         # Update weights and biases
-        self.W3 -= 0
-        self.b3 -= 0
-        self.W2 -= 0
-        self.b2 -= 0
-        self.W1 -= 0
-        self.b1 -= 0
+        self.W3 -= learning_rate * dW3
+        self.b3 -= learning_rate * db3
+        self.W2 -= learning_rate * dW2
+        self.b2 -= learning_rate * db2
+        self.W1 -= learning_rate * dW1
+        self.b1 -= learning_rate * db1
 
         ########### END YOUR CODE  ############
-
