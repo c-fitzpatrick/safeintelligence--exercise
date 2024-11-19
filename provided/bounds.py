@@ -42,7 +42,7 @@ class IntervalBoundPropagation:
             input_bounds (Tensor): The input bounds represented as a tensor with shape 
                 (batch_size, input_dim, 2), where the last dimension holds the lower and 
                 upper bounds for each input feature.
-            weights (Tensor): The weights of the linear layer with shape (input_dim, output_dim).
+            weights (Tensor): The weights of the linear layer with shape (output_dim, input_dim).
             bias (Tensor): The bias of the linear layer with shape (output_dim,).
 
         Returns:
@@ -54,7 +54,7 @@ class IntervalBoundPropagation:
             Given a network definition with input_dim=3 and an initial layer's weights:
 
             input_bounds.shape = (32, 3, 2)  # batch_size=32, input_dim=3
-            weights.shape = (3, 4)  # input_dim=3, output_dim=4
+            weights.shape = (4, 3)  # input_dim=3, output_dim=4
             bias.shape = (4,)  # output_dim=4
             output = propagate_bounds(input_bounds, weights, bias)
             output.shape  # (32, 4, 2)
