@@ -74,3 +74,7 @@ class TestIntervalBoundPropagation:
         ouput_bounds = bp.compute_bounds_forward(input_bounds)
 
         assert ouput_bounds.shape == (32, output_size, 2)
+
+        ouput_bounds = bp.compute_bounds_forward_alt(input_bounds)
+
+        assert ouput_bounds.shape == (32, output_size, 2)

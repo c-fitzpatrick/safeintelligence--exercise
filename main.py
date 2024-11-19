@@ -79,3 +79,8 @@ if __name__ == "__main__":
 
     print(f"Output bounds: shape {ouput_bounds.shape}")
     print(f"Output bounds: {ouput_bounds[:,0,:]}")
+
+    ouput_bounds_alt = bp.compute_bounds_forward_alt(input_bounds)
+
+    print(f"Output bounds: shape {ouput_bounds.shape}")
+    print(f"Output bounds: {ouput_bounds[:,0,:]}")

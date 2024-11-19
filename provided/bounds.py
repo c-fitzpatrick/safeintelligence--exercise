@@ -79,3 +79,26 @@ class IntervalBoundPropagation:
         ########### END YOUR CODE  ############
 
         return bounds_out
+    
+
+    def compute_bounds_forward_alt(self, input_bounds: Tensor) -> Tensor:
+        """
+        Computes the forward propagation of interval bounds for the lower and upper
+        separately using the entire forward pass for each.
+
+        Args:
+            input_bounds (Tensor): The input bounds represented as a tensor with shape 
+                (batch_size, input_dim, 2), where the last dimension holds the lower and 
+                upper bounds for each input feature.
+
+        Returns:
+            Tensor: The propagated bounds after passing through all layers of the network,
+            with shape (batch_size, output_dim, 2). The last dimension holds the lower and 
+            upper bounds for each output feature.
+        """
+        lower = self.network.forward(input_bounds[:, :, 0])
+        upper = self.network.forward(input_bounds[:, :, 0])
+
+        bounds_out = torch.stack([lower, upper], dim=2)
+
+        return bounds_out
